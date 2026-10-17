@@ -2,39 +2,21 @@
 
 function valida_usuario($conexion, $username, $password)
 {
-    // Codigo anterior:
-    // $qry = "
-    // SELECT id_usu FROM  
-    // prueba20271.usuario 
-    // WHERE usuario='" . $username . "' AND usu_pass='" . md5($password) . "'; 
-    // ";
-    // $rs = mysqli_query($conexion, $qry);
 
-    // Procedimiento Almacenado:
-    $hash = md5($password);
-    $stmt = $conexion->prepare("CALL prueba20271.ValidarUsuario(?, ?)"); // Se usa un "Prepared Statement" para mayor seguridad
-    $stmt->bind_param("ss", $username, $hash);
-    $stmt->execute();
-    $rs = $stmt->get_result();
+    $valido = 0;
 
-    if ($rs) { // entra cuando no hay error de sintaxis en la consulta
-        if (mysqli_num_rows($rs) > 0) { // entra si encuentra al menos un registro
-            #echo "OK<br>";
-            $fila = mysqli_fetch_assoc($rs);
-            #echo "id_usu=".$fila['id_usu']."<br>";
-            //header("Location: menu.php");
-            $valor = $fila['id_usu'];
-        } else { // entra si NO encuentra registros
-            $mensaje = "Usuario/password incorretos!!<br>";
-            //header("Location: acceso.php");
-            $valor = 0;
+    $sql_call = "CALL sp_validar_usuario('" . $username . "', '" . $password . "', @resu)";
+    if (mysqli_query($conexion, $sql_call)) {
+        $sql_select = "SELECT @resu AS valido";
+        $resultado_query = mysqli_query($conexion, $sql_select);
+        if ($fila = mysqli_fetch_assoc($resultado_query)) {
+            $valido = $fila['valido'];
         }
-    } else { // entra cuando existe error de sintaxis en la consulta
-        //echo "ERROR<br>";
-        //echo mysqli_error($conexion);
+        mysqli_free_result($resultado_query);
+    } else {
+        echo "Error al ejecutar el procedimiento: " . mysqli_error($conexion);
     }
-
-    return $valor;
+    return $valido;
 }
 
 ?>

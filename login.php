@@ -5,14 +5,19 @@ include_once("funciones.php");
 
 $conexion = conecta();
 
-$id = valida_usuario($conexion, $_POST['usu'], $_POST['pass']);
+//print_r($_POST);die();exit();
 
-if ($id > 0) {
-    // header("Location: menu.php");
-    echo $id;
-} elseif ($id == 0) {
-    header("Location: acceso.php");
+if (isset($_POST['username']) && isset($_POST['password'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
+    $valido = valida_usuario($conexion, $username, $password);
+
+    if ($valido > 0) {
+        header("Location: menu.php");
+    } elseif ($rs == 0) {
+        $men = 2;
+        header("Location: acceso.php?mensaje=" . $men);
+    }
 }
-
 ?>

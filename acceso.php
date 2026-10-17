@@ -2,32 +2,38 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
     <title>Formulario</title>
-
-    <link rel="stylesheet" href="acceso.css">
+    <link rel="stylesheet" href="estilos.css">
 </head>
 
 <body>
     <?php
 
+    //print_r($_POST);
+    
     ?>
-    <form name="form1" method="post" action="login.php">
-        Usuario:
-        <input type="text" name="usu" size="20" />
+    <section id="login-form">
+        <h2>Login</h2>
+        <form action="login.php" method="POST">
 
-        Contraseña:
-        <input type="password" name="pass" size="20" />
-        <section id="login-error">
-            <?php
-            if (isset($mensaje)) {
-                echo $mensaje;
-            }
-            ?>
-        </section>
-        
-        <input type="submit" name="boton" value="Enviar">
-    </form>
+            <input type="text" id="username" name="username" placeholder="usuario"><br><br>
+
+            <input type="password" id="password" name="password" placeholder="password"><br><br>
+            <section id="login-error">
+                <?php
+                if (isset($_GET['mensaje'])) {
+                    if ($_GET['mensaje'] == 2) {
+                        echo "Usuario/password incorretos!!<br>";
+                    }
+                }
+                ?>
+            </section>
+            <br><br>
+
+            <input type="submit" name="submit" value="Ingresar">
+        </form>
+    </section>
+
 </body>
 
 </html>
